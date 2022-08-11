@@ -4,7 +4,8 @@ const authKey = process.env.SHOWWCASE_AUTH_KEY;
 export default async function handler(req, res) {
   const response = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
   const json = await response.json();
-  const item = await fetch(`https://hacker-news.firebaseio.com/v0/item/${json[0]}.json?print=pretty`);
+  const index = Math.floor(Math.random() * (json.length - 1))
+  const item = await fetch(`https://hacker-news.firebaseio.com/v0/item/${json[index]}.json?print=pretty`);
   const itemJson = await item.json();
 
   const requestBody = {
@@ -20,7 +21,7 @@ export default async function handler(req, res) {
   const postResponse = await fetch('https://cache.showwcase.com/threads', {
     method: 'POST',
     headers: {
-      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzUxNzAsImVtYWlsIjoia2FwZWVsQHNob3d3Y2FzZS5jb20iLCJjcmVhdGVkQXQiOjE2NjAyMTQ3OTY3OTUsInR5cGUiOiJhdXRoIiwiaWF0IjoxNjYwMjE0Nzk2fQ.WbHjYmp_bqt7ioepJuOGgch_4WIhPhflonJsyZtNENA',
+      Authorization: authKey,
       "Content-Type": 'application/json'
     },
     body: JSON.stringify(requestBody)
