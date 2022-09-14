@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-const authKey = process.env.SHOWWCASE_AUTH_KEY;
+const authKey = process.env.HACKERNEWS_BOT_AUTH_KEY;
 
 async function getArticle(json) {
   const index = Math.floor(Math.random() * (json.length - 1))
@@ -40,6 +40,5 @@ export default async function handler(req, res) {
   });
 
   const postResponseJson = await postResponse.json();
-  console.log(postResponseJson);
   res.status(postResponse.status).json(postResponseJson);
 }

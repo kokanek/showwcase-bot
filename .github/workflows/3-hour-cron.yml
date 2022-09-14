@@ -9,4 +9,8 @@ jobs:
       - name: Call the hackernews bot
         run: |
           curl --request POST \
-          --url 'https://showwcase-bot.vercel.app/api/bot'
+          --url 'https://showwcase-bot.vercel.app/api/hackernewsbot'
+      - name: Call the frontend bot
+        run: |
+          curl --request POST \
+          --url 'https://showwcase-bot.vercel.app/api/frontendbot'
