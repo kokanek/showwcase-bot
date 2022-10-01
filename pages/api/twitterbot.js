@@ -105,3 +105,11 @@ export default async function handler(req, res) {
 
   res.status(200).json({status: 'ok'});
 }
+
+const parent = {
+  species: 'Homo sapiens',
+  breathe: () => console.log('breathing')
+}
+
+const child = Object.create(parent);
+console.log(child);
