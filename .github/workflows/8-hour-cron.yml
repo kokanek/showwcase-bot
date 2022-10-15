@@ -1,4 +1,4 @@
-name: 3-hour-cron
+name: backend-bot
 on:
   schedule:
     - cron: '0 14,20,6 * * *'
@@ -6,7 +6,7 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Call the hackernews bot
+      - name: Call the backend bot
         run: |
           curl --request POST \
           --url 'https://showwcase-bot.vercel.app/api/backendbot'

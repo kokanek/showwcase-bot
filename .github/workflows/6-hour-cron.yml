@@ -1,4 +1,4 @@
-name: 3-hour-cron
+name: frontend-bot
 on:
   schedule:
     - cron: '0 */6 * * *'
