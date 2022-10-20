@@ -8,16 +8,17 @@ const rapidApiKey = process.env.RAPID_API_AUTH_KEY;
 const tweetpikAuthKey = process.env.TWEETPIK_AUTH_KEY;
 
 export default async function handler(req, res) {
-
+  const topics = ['web development', 'web3', 'webdev', 'HTML', 'CSS']
+  const topicIndex = Math.floor(Math.random() * (topics.length - 1))
   const options = {
     method: 'GET',
     url: 'https://twitter154.p.rapidapi.com/search/search',
     params: {
-      query: 'web development',
+      query: topics[topicIndex],
       section: 'top',
       min_retweets: '10',
       min_likes: '10',
-      limit: '10',
+      limit: '20',
       language: 'en'
     },
     headers: {
@@ -42,7 +43,7 @@ export default async function handler(req, res) {
     },
     body: JSON.stringify({
       tweetId: tweetId,
-      dimension: '1:1',
+      dimension: 'autoSize',
       displayLikes: true,
       displayReplies: true,
       displayRetweets: true
