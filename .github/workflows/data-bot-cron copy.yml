@@ -1,0 +1,12 @@
+name: data-bot-cron
+on:
+  schedule:
+    - cron: '0 17,1,9 * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the data bot
+        run: |
+          curl --request POST \
+          --url 'https://showwcase-bot.vercel.app/api/databot'
