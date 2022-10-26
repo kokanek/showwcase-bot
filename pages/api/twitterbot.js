@@ -8,7 +8,7 @@ const rapidApiKey = process.env.RAPID_API_AUTH_KEY;
 const tweetpikAuthKey = process.env.TWEETPIK_AUTH_KEY;
 
 export default async function handler(req, res) {
-  const topics = ['web development', 'web3', 'webdev', 'HTML', 'CSS']
+  const topics = ['web development', 'web3', 'React.js']
   const topicIndex = Math.floor(Math.random() * (topics.length - 1))
   const options = {
     method: 'GET',
