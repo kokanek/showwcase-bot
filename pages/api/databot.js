@@ -24,7 +24,6 @@ export default async function handler(req, res) {
     index = Math.floor(Math.random() * (json.length - 1))
     item = json[index];
 
-    console.log('item: ', item);
     if (item.url && (item.url.endsWith(".jpg") || item.url.endsWith(".png"))) {
       found = true
     }
