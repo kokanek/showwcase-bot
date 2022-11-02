@@ -1,0 +1,12 @@
+name: techcrunch-bot-cron
+on:
+  schedule:
+    - cron: '0 18,2,10 * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the techcrunch bot
+        run: |
+          curl --request POST \
+          --url 'https://showwcase-bot.vercel.app/api/techcrunchbot'

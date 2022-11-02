@@ -1,44 +1,38 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const axios = require("axios");
 
-const authKey = process.env.DATA_BOT_AUTH_KEY;
+const authKey = process.env.TECHCRUNCH_BOT_AUTH_KEY;
 const apiKey = process.env.RAPID_API_AUTH_KEY;
 
-// the techcrunch bot handler
+const introMessages = [
+  "Here's the latest tech news from Techcrunch: \n 👉🏾"
+]
+
 export default async function handler(req, res) {
   const options = {
     method: 'GET',
-    url: 'https://reddit3.p.rapidapi.com/subreddit',
-    params: {url: 'https://www.reddit.com/r/dataisbeautiful'},
+    url: 'https://tech-news3.p.rapidapi.com/techcrunch',
     headers: {
       'X-RapidAPI-Key': apiKey,
-      'X-RapidAPI-Host': 'reddit3.p.rapidapi.com'
+      'X-RapidAPI-Host': 'tech-news3.p.rapidapi.com'
     }
   };
-  const response = await axios.request(options)
-  const json = await response?.data?.posts || [];
+  const response = await axios.request(options);
+  const json = await response.data;
+  
+  const index = Math.floor(Math.random() * (json.length - 1))
+  let article = json[index];
 
-  let found = false;
-  let index, item;
-
-  while(!found) {
-    index = Math.floor(Math.random() * (json.length - 1))
-    item = json[index];
-
-    if (item.url && (item.url.endsWith(".jpg") || item.url.endsWith(".png"))) {
-      found = true
-    }
-  }
-
+  const introMessageIndex = Math.floor(Math.random() * 4);
   const requestBody = {
-    "message": `${item.title} \n https://www.reddit.com${item.permalink}`,
+    "message": `${introMessages[introMessageIndex]} ${article.title} \n`,
     "mentions": [],
-    "images": [item.url],
+    "images": [article.img],
     "code": "",
     "codeLanguage": "",
     "id": -1,
     "videoUrl": "",
-    "linkPreviewUrl": item.url,
+    "linkPreviewUrl": article.link,
   }
 
   const postResponse = await fetch('https://cache.showwcase.com/threads', {
