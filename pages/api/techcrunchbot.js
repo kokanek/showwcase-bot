@@ -8,6 +8,7 @@ const introMessages = [
   "Here's the latest tech news from Techcrunch: \n 👉🏾"
 ]
 
+// techcrunch bot handler
 export default async function handler(req, res) {
   const options = {
     method: 'GET',
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
   const index = Math.floor(Math.random() * (json.length - 1))
   let article = json[index];
 
-  const introMessageIndex = Math.floor(Math.random() * 4);
+  const introMessageIndex = Math.floor(Math.random() * introMessages.length);
   const requestBody = {
     "message": `${introMessages[introMessageIndex]} ${article.title} \n`,
     "mentions": [],

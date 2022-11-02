@@ -4,7 +4,7 @@ const axios = require("axios");
 const authKey = process.env.DATA_BOT_AUTH_KEY;
 const apiKey = process.env.RAPID_API_AUTH_KEY;
 
-// the techcrunch bot handler
+// the data bot handler
 export default async function handler(req, res) {
   const options = {
     method: 'GET',
