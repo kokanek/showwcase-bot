@@ -1,0 +1,12 @@
+name: meme-bot-cron
+on:
+  schedule:
+    - cron: '0 19,3,11 * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the meme bot
+        run: |
+          curl --request POST \
+          --url 'https://showwcase-bot.vercel.app/api/memebot'
