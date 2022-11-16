@@ -23,33 +23,37 @@ export default async function handler(req, res) {
   let meme = {};
   let count = 0;
   
-  while(!imageUrl && count > 9) {
+  while(!imageUrl && count < 20) {
     const index = Math.floor(Math.random() * (tweets.length - 1));
     meme = tweets[index];
     imageUrl = meme?.entities?.media[0]?.media_url || null;
     count++;
   }
 
-  const requestBody = {
-    "message": `https://twitter.com/i/web/status/${meme.id_str}`,
-    "mentions": [],
-    "images": [imageUrl],
-    "code": "",
-    "codeLanguage": "",
-    "id": -1,
-    "videoUrl": "",
-    "linkPreviewUrl": "",
+  if (imageUrl) {
+    const requestBody = {
+      "message": `${meme.full_text}`,
+      "mentions": [],
+      "images": [imageUrl],
+      "code": "",
+      "codeLanguage": "",
+      "id": -1,
+      "videoUrl": "",
+      "linkPreviewUrl": "",
+    }
+  
+    const postResponse = await fetch('https://cache.showwcase.com/threads', {
+      method: 'POST',
+      headers: {
+        Authorization: authKey,
+        "Content-Type": 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+  
+    const postResponseJson = await postResponse.json();
+    res.status(postResponse.status).json(postResponseJson);
+  } else {
+    res.status(400).json({error: 'internal error while posting'});
   }
-
-  const postResponse = await fetch('https://cache.showwcase.com/threads', {
-    method: 'POST',
-    headers: {
-      Authorization: authKey,
-      "Content-Type": 'application/json'
-    },
-    body: JSON.stringify(requestBody)
-  });
-
-  const postResponseJson = await postResponse.json();
-  res.status(postResponse.status).json(postResponseJson);
 }
