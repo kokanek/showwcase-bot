@@ -1,40 +1,37 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const axios = require("axios");
 
-const authKey = process.env.TECHCRUNCH_BOT_AUTH_KEY;
+const authKey = process.env.YOUTUBE_BOT_AUTH_KEY;
 const apiKey = process.env.RAPID_API_AUTH_KEY;
-
-const introMessages = [
-  "Here's the latest tech news from Techcrunch: \n 👉🏾"
-]
+const FREECODECAMP_CHANNEL_ID = 'UC8butISFwT-Wl7EV0hUK0BQ';
 
 // techcrunch bot handler
 export default async function handler(req, res) {
   const options = {
     method: 'GET',
-    url: 'https://tech-news3.p.rapidapi.com/techcrunch',
+    url: 'https://youtube138.p.rapidapi.com/channel/videos/',
+    params: {id: FREECODECAMP_CHANNEL_ID, hl: 'en', gl: 'US'},
     headers: {
       'X-RapidAPI-Key': apiKey,
-      'X-RapidAPI-Host': 'tech-news3.p.rapidapi.com'
+      'X-RapidAPI-Host': 'youtube138.p.rapidapi.com'
     }
   };
   
   const response = await axios.request(options);
-  const json = await response.data;
+  const json = await response.data.contents;
   
   const index = Math.floor(Math.random() * (json.length - 1))
-  let article = json[index];
+  let video = json[index];
 
-  const introMessageIndex = Math.floor(Math.random() * introMessages.length);
   const requestBody = {
-    "message": `${introMessages[introMessageIndex]} ${article.title} \n`,
+    "message": ``,
     "mentions": [],
     "images": [],
     "code": "",
     "codeLanguage": "",
     "id": -1,
     "videoUrl": "",
-    "linkPreviewUrl": article.link,
+    "linkPreviewUrl": `https://www.youtube.com/watch?v=${video.video.videoId}`,
   }
 
   const postResponse = await fetch('https://cache.showwcase.com/threads', {
