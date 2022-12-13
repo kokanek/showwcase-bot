@@ -31,7 +31,8 @@ export default async function handler(req, res) {
   }
 
   const requestBody = {
-    "message": `${item.title} \n https://www.reddit.com${item.permalink}`,
+    "title": `${item.title}`,
+    "message": `https://www.reddit.com${item.permalink}`,
     "mentions": [],
     "images": [item.url],
     "code": "",

@@ -5,7 +5,7 @@ const authKey = process.env.TECHCRUNCH_BOT_AUTH_KEY;
 const apiKey = process.env.RAPID_API_AUTH_KEY;
 
 const introMessages = [
-  "Here's the latest tech news from Techcrunch: \n 👉🏾"
+  "This is trending on Techcrunch: \n 👉🏾"
 ]
 
 // techcrunch bot handler
@@ -27,6 +27,7 @@ export default async function handler(req, res) {
 
   const introMessageIndex = Math.floor(Math.random() * introMessages.length);
   const requestBody = {
+    "title": "Latest tech news 🗞️",
     "message": `${introMessages[introMessageIndex]} ${article.title} \n`,
     "mentions": [],
     "images": [],

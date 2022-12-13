@@ -9,6 +9,7 @@ export default async function handler(req, res) {
   let repo = json[index];
 
   const requestBody = {
+    "title": "Git trending repo of the day 🏆",
     "message": `Check out this trending${repo.language ? ` ${repo.language}` : ''} repo on github \n 👉🏾 ${repo.repositoryName} by ${repo.username} \n`,
     "mentions": [],
     "images": [],

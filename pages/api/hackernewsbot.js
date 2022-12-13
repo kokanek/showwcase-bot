@@ -20,7 +20,8 @@ export default async function handler(req, res) {
   }
 
   const requestBody = {
-    "message": `Check out this top story trending on Hackernews: \n 👉🏾 ${article.title} \n 🔗 ${article.url}`,
+    "title": 'Trending now!',
+    "message": `check out this top story trending on Hackernews: \n 👉🏾 ${article.title} \n 🔗 ${article.url}`,
     "mentions": [],
     "images": [],
     "code": "",

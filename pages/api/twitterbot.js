@@ -54,6 +54,7 @@ export default async function handler(req, res) {
 
   // post to showwcase
   const showwcaseRequestBody = {
+    "title": 'Straight From Twitter',
     "message": `🔗 👉🏾 https://twitter.com/i/web/status/${tweetId}`,
     "mentions": [],
     "images": [tweetScreenshot.url],
