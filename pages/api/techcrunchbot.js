@@ -27,8 +27,8 @@ export default async function handler(req, res) {
 
   const introMessageIndex = Math.floor(Math.random() * introMessages.length);
   const requestBody = {
-    "title": "Latest tech news 🗞️",
-    "message": `${introMessages[introMessageIndex]} ${article.title} \n`,
+    "title": `${article.title}`,
+    "message": `${introMessages[introMessageIndex]}\n`,
     "mentions": [],
     "images": [],
     "code": "",

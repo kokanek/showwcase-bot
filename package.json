@@ -12,6 +12,7 @@
     "@squoosh/cli": "^0.7.2",
     "async": "^3.2.4",
     "axios": "^1.1.2",
+    "github-trends-api": "^1.0.1",
     "next": "12.2.4",
     "puppeteer": "^18.0.5",
     "react": "18.2.0",

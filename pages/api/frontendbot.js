@@ -18,8 +18,8 @@ export default async function handler(req, res) {
 
   const introMessageIndex = Math.floor(Math.random() * 4);
   const requestBody = {
-    "title": `${introMessages[introMessageIndex]}`,
-    "message": `${article.title} \n 🔗 ${article.url}`,
+    "title": `${article.title}`,
+    "message": `${introMessages[introMessageIndex]} \n 🔗 ${article.url}`,
     "mentions": [],
     "images": [],
     "code": "",
