@@ -1,7 +1,7 @@
 name: data-bot-cron
 on:
   schedule:
-    - cron: '0 17,1,9 * * *'
+    # - cron: '0 17,1,9 * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest

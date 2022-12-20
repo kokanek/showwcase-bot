@@ -1,7 +1,7 @@
 name: meme-bot-cron
 on:
   schedule:
-    - cron: '0 19,3,11 * * *'
+    # - cron: '0 19,3,11 * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest
