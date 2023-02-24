@@ -3,16 +3,9 @@ import githubTrends from 'github-trends-api';
 const authKey = process.env.GITHUB_BOT_AUTH_KEY;
 
 export default async function handler(req, res) {
-  const options = {
-    section: '',
-    language: '',
-    since: '',
-    spoken_language_code: ''
-  }
-
   const json = await githubTrends();
   console.log('trends: ', json);
-  
+
   const index = Math.floor(Math.random() * (json.length - 1))
   let repo = json[index];
 
