@@ -1,0 +1,12 @@
+name: paul-graham-bot-cron
+on:
+  schedule:
+    - cron: '30 19,3,11 * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the paul graham bot
+        run: |
+          curl --request POST \
+          --url 'https://showwcase-bot.vercel.app/api/paulgrahambot'
