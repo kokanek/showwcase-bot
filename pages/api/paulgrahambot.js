@@ -2,10 +2,9 @@
 let Parser = require('rss-parser');
 let parser = new Parser();
 let { initializeApp } = require('firebase/app');
-import { getFirestore } from "firebase/firestore";
 const md5 = require('md5');
 // let { getAnalytics } = require('firebase/analytics');
-let { collection, query, where, getDocs, addDoc } = require("firebase/firestore");
+let { collection, query, where, getDocs, addDoc, deleteDoc, getFirestore, doc } = require("firebase/firestore");
 
 const firebaseConfig = {
   apiKey: "AIzaSyD9jM4JvSVSbtNDUUSgrvU996E3SSI5ZjY",
@@ -38,7 +37,13 @@ export default async function handler(req, res) {
       const q = query(collection(db, botCollectionId), where("hash", "==", hash));
       const querySnapshot = await getDocs(q);
 
-      if (querySnapshot.length > 0) {
+      let count = 0;
+      querySnapshot.forEach(doc => {
+        console.log('clashing doc with id: ', doc.id);
+        count++;
+      })
+
+      if (count > 0) {
         continue;
       } else {
         itemToPost = { ...item, hash: hash };
@@ -73,16 +78,33 @@ export default async function handler(req, res) {
     });
 
     const postResponseJson = await postResponse.json();
+    let today = new Date();
+    var expirationDate = new Date(new Date().setDate(today.getDate() + 7));
 
     await addDoc(collection(db, botCollectionId), {
       title: itemToPost.title,
       link: itemToPost.link,
-      hash: itemToPost.hash
+      hash: itemToPost.hash,
+      expiration: expirationDate
     });
+
+    const deleteQuery = query(collection(db, botCollectionId), where("expiration", "<", today));
+    const querySnapshot = await getDocs(deleteQuery);
+    const idsToDelete = [];
+
+    querySnapshot.forEach(doc => {
+      idsToDelete.push(doc.id);
+    });
+
+    for (const idToDelete of idsToDelete) {
+      console.log('Deleting doc with id: ', idToDelete);
+      await deleteDoc(doc(db, botCollectionId, idToDelete));
+    }
 
     res.status(postResponse.status).json(postResponseJson);
   } catch (e) {
-    res.status(400).json("Error writing to firebase:");
+    console.log('error: ', e);
+    res.status(400).json("Error writing to firebase:", e);
   }
 
 }
