@@ -1,4 +1,4 @@
-name: backend-bot
+name: backend-bot & world news bot
 on:
   schedule:
     - cron: '0 14,20,6 * * *'
@@ -10,3 +10,7 @@ jobs:
         run: |
           curl --request POST \
           --url 'https://showwcase-bot.vercel.app/api/backendbot'
+      - name: Call the world news bot
+        run: |
+          curl --request POST \
+          --url 'https://showwcase-bot.vercel.app/api/worldnewsbot'
