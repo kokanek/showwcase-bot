@@ -1,7 +1,7 @@
-export function createRequestBody(itemToPost) {
+export function createRequestBody(itemToPost, summary) {
   return {
     "title": `${itemToPost.title}`,
-    "message": "",
+    "message": summary,
     "mentions": [],
     "images": [],
     "code": "",

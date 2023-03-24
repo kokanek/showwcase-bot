@@ -43,6 +43,29 @@ export async function getItemToPost(items, urlKey, db, botCollectionId) {
   return itemToPost;
 }
 
+export async function isItemAlreadyPosted(itemKey, db, botCollectionId) {
+  const hash = md5(itemKey);
+  try {
+    const q = query(collection(db, botCollectionId), where("hash", "==", hash));
+    const querySnapshot = await getDocs(q);
+
+    let count = 0;
+    querySnapshot.forEach(doc => {
+      console.log('clashing doc with id: ', doc.id);
+      count++;
+    })
+
+    if (count > 0) {
+      return true;
+    }
+  } catch (e) {
+    console.error("Error reading from firebase: ", e);
+    return false;
+  }
+
+  return false;
+}
+
 export async function addPostToFirebase(title, link, db, botCollectionId) {
   let today = new Date();
   var expirationDate = new Date(new Date().setDate(today.getDate() + 7));

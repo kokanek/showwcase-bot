@@ -7,6 +7,7 @@ let { getFirestore } = require("firebase/firestore");
 import { createRequestBody, postToShowwcase } from '../../utils';
 import { addPostToFirebase, deleteOldPosts, getItemToPost } from '../../utils/firebase';
 import { firebaseConfig } from '../../utils/firebase';
+import { summarize } from '../../utils/gpt';
 
 const authKey = process.env.PAUL_GRAHAM_BOTH_AUTH_KEY;
 const botCollectionId = "PaulGrahamBot";
@@ -21,7 +22,11 @@ export default async function handler(req, res) {
 
   try {
     let itemToPost = await getItemToPost(items, "link", db, botCollectionId)
-    const requestBody = createRequestBody(itemToPost);
+
+    const summary = await summarize(itemToPost.link);
+    console.log('summary: ', summary);
+    const requestBody = createRequestBody(itemToPost, summary);
+
     const postResponse = await postToShowwcase(authKey, requestBody);
 
     const postResponseJson = await postResponse.json();
