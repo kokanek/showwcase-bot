@@ -1,11 +1,16 @@
-
-// require some helpers
+let { initializeApp } = require('firebase/app');
+let { getFirestore } = require("firebase/firestore");
+import { firebaseConfig, getItemToPost } from '../../utils/firebase';
+import { postToShowwcase } from "../../utils";
+import { addPostToFirebase, deleteOldPosts } from "../../utils/firebase";
 const axios = require('axios');
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const authKey = process.env.TWITTER_BOT_AUTH_KEY;
 const rapidApiKey = process.env.RAPID_API_AUTH_KEY;
 const tweetpikAuthKey = process.env.TWEETPIK_AUTH_KEY;
+
+const botCollectionId = "TwitterBot";
 
 export default async function handler(req, res) {
   const topics = ['web development', 'React.js']
@@ -29,13 +34,14 @@ export default async function handler(req, res) {
 
   const response = await axios.request(options);
   const topTweets = response.data;
-  
-  const index = Math.floor(Math.random() * (topTweets.results.length - 1))
-  const tweet = topTweets.results[index];
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  let tweet = await getItemToPost(topTweets.results, "tweet_id", db, botCollectionId)
   const tweetId = String(tweet.tweet_id);
 
   // Get the tweetpik URL here
-  const tweetRequest = { 
+  const tweetRequest = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -65,14 +71,10 @@ export default async function handler(req, res) {
     "linkPreviewUrl": '',
   }
 
-  const postResponse = await fetch('https://cache.showwcase.com/threads', {
-    method: 'POST',
-    headers: {
-      Authorization: authKey,
-      "Content-Type": 'application/json'
-    },
-    body: JSON.stringify(showwcaseRequestBody)
-  });
+  const postResponse = await postToShowwcase(authKey, showwcaseRequestBody);
+
+  await addPostToFirebase(`https://twitter.com/i/web/status/${tweetId}`, tweetScreenshot.url, db, botCollectionId);
+  await deleteOldPosts(db, botCollectionId);
 
   const postResponseJson = await postResponse.json();
   res.status(postResponse.status).json(postResponseJson);

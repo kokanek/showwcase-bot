@@ -1,4 +1,5 @@
 const openAIKey = process.env.OPEN_AI_API_KEY;
+const prompt = `Breakdown this article in a TLDR style format with 300 characters maximum. Explain it as a statement. Don't start the response with "This article is" : `;
 
 export async function summarize(url) {
 
@@ -12,7 +13,7 @@ export async function summarize(url) {
       },
       body: JSON.stringify({
         "model": "gpt-3.5-turbo",
-        "messages": [{ "role": "system", "content": `Create a summary for the content in this URL in less than 50 words: ${url}` }]
+        "messages": [{ "role": "system", "content": `${prompt} ${url}` }]
       })
     });
 

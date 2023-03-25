@@ -1,8 +1,17 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+let { initializeApp } = require('firebase/app');
+let { getFirestore } = require("firebase/firestore");
+import { firebaseConfig } from '../../utils/firebase';
+import { postToShowwcase } from "../../utils";
+import { getItemToPost } from "../../utils/firebase";
+import { addPostToFirebase, deleteOldPosts } from "../../utils/firebase";
+import { summarize } from '../../utils/gpt';
 const axios = require("axios");
 
 const authKey = process.env.WORLD_NEWS_BOTH_AUTH_KEY;
 const apiKey = process.env.RAPID_API_AUTH_KEY;
+
+const botCollectionId = "WorldNewsBot";
+
 
 // techcrunch bot handler
 export default async function handler(req, res) {
@@ -15,20 +24,18 @@ export default async function handler(req, res) {
     }
   };
 
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
   const response = await axios.request(options);
   const json = await response.data;
 
-  let index = Math.floor(Math.random() * (json.length - 1))
-
-  while (json[index].title.length > 80) {
-    index = Math.floor(Math.random() * (json.length - 1))
-  }
-
-  let article = json[index];
+  const article = await getItemToPost(json, "link", db, botCollectionId)
+  const summary = await summarize(article.url);
 
   const requestBody = {
-    "title": `${article.title}`,
-    "message": `Latest news from ${article.source} (${article.category})\n`,
+    "title": `JUST IN: from ${article.source} (${article.category})\n`,
+    "message": summary,
     "mentions": [],
     "images": [],
     "code": "",
@@ -38,17 +45,12 @@ export default async function handler(req, res) {
     "linkPreviewUrl": article.link,
   }
 
-  console.log(requestBody);
+  const postResponse = await postToShowwcase(authKey, requestBody);
 
-  const postResponse = await fetch('https://cache.showwcase.com/threads', {
-    method: 'POST',
-    headers: {
-      Authorization: authKey,
-      "Content-Type": 'application/json'
-    },
-    body: JSON.stringify(requestBody)
-  });
+  await addPostToFirebase(article.title, article.link, db, botCollectionId);
+  await deleteOldPosts(db, botCollectionId);
 
   const postResponseJson = await postResponse.json();
+
   res.status(postResponse.status).json(postResponseJson);
 }
