@@ -31,8 +31,9 @@ export default async function handler(req, res) {
   const json = await response.data;
 
   const article = await getItemToPost(json, "link", db, botCollectionId)
-  const summary = await summarize(article.url);
+  const summary = await summarize(article.link);
 
+  console.log('reached here 1');
   const requestBody = {
     "title": `JUST IN: from ${article.source} (${article.category})\n`,
     "message": summary,
@@ -45,6 +46,7 @@ export default async function handler(req, res) {
     "linkPreviewUrl": article.link,
   }
 
+  console.log('reached here 2');
   const postResponse = await postToShowwcase(authKey, requestBody);
 
   await addPostToFirebase(article.title, article.link, db, botCollectionId);
