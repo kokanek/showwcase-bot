@@ -24,7 +24,6 @@ export default async function handler(req, res) {
     let itemToPost = await getItemToPost(items, "link", db, botCollectionId)
 
     const summary = await summarize(itemToPost.link);
-    console.log('summary: ', summary);
     const requestBody = createRequestBody(itemToPost, summary);
 
     const postResponse = await postToShowwcase(authKey, requestBody);

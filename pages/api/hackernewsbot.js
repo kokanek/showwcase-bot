@@ -1,5 +1,11 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+let { initializeApp } = require('firebase/app');
+let { getFirestore } = require("firebase/firestore");
+import { firebaseConfig } from '../../utils/firebase';
+import { postToShowwcase } from "../../utils";
+import { addPostToFirebase, deleteOldPosts, isItemAlreadyPosted } from "../../utils/firebase";
+
 const authKey = process.env.HACKERNEWS_BOT_AUTH_KEY;
+const botCollectionId = "HackernewsBot";
 
 async function getArticle(json) {
   const index = Math.floor(Math.random() * (json.length - 1))
@@ -14,9 +20,14 @@ export default async function handler(req, res) {
   const json = await response.json();
   let article = {};
 
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  let isPostedOnce = false;
+
   // keep fetching until we get an article with a url
-  while(!article.url) {
+  while (!article.url || isPostedOnce) {
     article = await getArticle(json);
+    isPostedOnce = await isItemAlreadyPosted(article.url, db, botCollectionId);
   }
 
   const requestBody = {
@@ -31,14 +42,10 @@ export default async function handler(req, res) {
     "linkPreviewUrl": article.url,
   }
 
-  const postResponse = await fetch('https://cache.showwcase.com/threads', {
-    method: 'POST',
-    headers: {
-      Authorization: authKey,
-      "Content-Type": 'application/json'
-    },
-    body: JSON.stringify(requestBody)
-  });
+  const postResponse = await postToShowwcase(authKey, requestBody);
+
+  await addPostToFirebase(article.title, article.url, db, botCollectionId);
+  await deleteOldPosts(db, botCollectionId);
 
   const postResponseJson = await postResponse.json();
   res.status(postResponse.status).json(postResponseJson);
