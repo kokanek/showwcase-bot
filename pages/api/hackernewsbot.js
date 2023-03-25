@@ -3,6 +3,7 @@ let { getFirestore } = require("firebase/firestore");
 import { firebaseConfig } from '../../utils/firebase';
 import { postToShowwcase } from "../../utils";
 import { addPostToFirebase, deleteOldPosts, isItemAlreadyPosted } from "../../utils/firebase";
+import { summarize } from '../../utils/gpt';
 
 const authKey = process.env.HACKERNEWS_BOT_AUTH_KEY;
 const botCollectionId = "HackernewsBot";
@@ -29,14 +30,15 @@ export default async function handler(req, res) {
     article = await getArticle(json);
     isPostedOnce = await isItemAlreadyPosted(article.url, db, botCollectionId);
   }
+  const summary = await summarize(article.url);
 
   const requestBody = {
     "title": `${article.title}`,
-    "message": `Check out this top story trending on Hackernews: 👉🏾  \n 🔗 ${article.url}`,
+    "message": summary,
     "mentions": [],
     "images": [],
     "code": "",
-    "codeLanguage": "JavaScript",
+    "codeLanguage": "",
     "id": -1,
     "videoUrl": "",
     "linkPreviewUrl": article.url,
