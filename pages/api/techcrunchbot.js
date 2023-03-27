@@ -2,8 +2,8 @@ const axios = require("axios");
 let { initializeApp } = require('firebase/app');
 let { getFirestore } = require("firebase/firestore");
 import { firebaseConfig } from '../../utils/firebase';
-import { postToShowwcase, getItemToPost } from "../../utils";
-import { addPostToFirebase, deleteOldPosts } from "../../utils/firebase";
+import { postToShowwcase } from "../../utils";
+import { addPostToFirebase, deleteOldPosts, getItemToPost } from "../../utils/firebase";
 
 const authKey = process.env.TECHCRUNCH_BOT_AUTH_KEY;
 const apiKey = process.env.RAPID_API_AUTH_KEY;
